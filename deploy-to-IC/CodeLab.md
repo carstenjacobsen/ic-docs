@@ -24,7 +24,7 @@ This CodeLab covers:
 
 The flow looks like this:
 
-![Deployment Flow](images/deploy.png)
+![Deployment Flow](images/deploy_flow.png)
 
 ## Create New Project
 Duration: 0:03:00
