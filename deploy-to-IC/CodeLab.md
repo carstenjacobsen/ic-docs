@@ -73,7 +73,7 @@ Canister created with id: "ncmzx-piaaa-aaaaa-bbbbb-cai"
 
 ```
 
-## Create the wallet canister
+## Deploy the wallet canister
 
 The canister created in the previous step will now be converted to a wallet canister, and the ICP will be converted to cycles.
 
@@ -109,5 +109,7 @@ $ dfx deploy --network ic
 ```
 
 It's the same command used for local deploys, but with the added parameter `--network ic`.
+
+
 
 
