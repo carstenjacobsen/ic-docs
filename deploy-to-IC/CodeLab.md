@@ -63,6 +63,7 @@ $ dfx ledger --network ic balance
 **Note:** Free cycles are available from the Cycles Faucet [here](https://smartcontracts.org/docs/quickstart/cycles-faucet.html). 
 
 ## Create canister with ICP
+Duration: 0:01:00
 
 Next create a canister pre-loaded with ICP. This canister will be used as the wallet canister holding cycles. The principle ID retrieved in the second step is used in this step to link the canister to the principle.
 
@@ -74,6 +75,7 @@ Canister created with id: "ncmzx-piaaa-aaaaa-bbbbb-cai"
 ```
 
 ## Deploy the wallet canister
+Duration: 0:02:00
 
 The canister created in the previous step will now be converted to a wallet canister, and the ICP will be converted to cycles.
 
@@ -102,6 +104,8 @@ Canister was topped up!
 The ledger will need to have sufficient ICP to top up the wallet canister with the chosen amount. If the ledger doesn't have sufficient ICP, then repeat Step 4.
 
 ## Deploy dapp
+Duration: 0:01:00
+
 A dapp can now be deployed to the IC and be public available, by running this command in the dapp project root:
 
 ```bash
