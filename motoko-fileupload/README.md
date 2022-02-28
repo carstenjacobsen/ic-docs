@@ -124,13 +124,44 @@ public shared({caller}) func commit_batch(
 The function returns the incremented counter variable.
 
 #### HTTP Request()
-Asset canisters can be receive HTTP requests and serve web pages and assets like image files. In this example dapp the frontend is showing the uploaded image on the page after the upload has completed. The backend needs to support the incoming requests to get an image, and sending the image data to the browser.
+Asset canisters can be receive HTTP requests and serve web pages and assets like image files. In this example dapp the frontend is showing the uploaded image on the page after the upload has completed. The backend needs to support the incoming requests to get an image, and a streaming strategy for sending the image data to the browser.
 
 ##### GET request
-**GET request**
+
 ```javascript
-public query func getCount() : async Nat {
-    return counter;
+public shared query({caller}) func http_request(
+  request : Types.HttpRequest,
+) : async Types.HttpResponse {
+
+  if (request.method == "GET") {
+    let split: Iter.Iter<Text> = Text.split(request.url, #char '?');
+    let key: Text = Iter.toArray(split)[0];
+    let asset: ?Types.Asset = assets.get(key);
+
+      switch (asset) {
+        case (?{content_type: Text; encoding: Types.AssetEncoding;}) {
+          return {
+            body = encoding.content_chunks[0];
+            headers = [ ("Content-Type", content_type),
+                        ("accept-ranges", "bytes"),
+                        ("cache-control", "private, max-age=0") ];
+            status_code = 200;
+            streaming_strategy = create_strategy(
+              key, 0, {content_type; encoding;}, encoding,
+            );
+          };
+        };
+        case null {
+      };
+    };
+  };
+
+  return {
+    body = Blob.toArray(Text.encodeUtf8("Permission denied. Could not perform this operation"));
+    headers = [];
+    status_code = 403;
+    streaming_strategy = null;
+  };
 };
 ```
 
