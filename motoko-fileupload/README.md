@@ -75,21 +75,59 @@ public shared({caller}) func create_chunk(chunk: Types.Chunk) : async {
 };
 ```
 
-#### count()
-The `count()` function increments the counter variable. This function is invoked when the user clicks the button on the frontend, or when the function is called through the Candid interface.
+#### Commit batch
+The function `commit_batch()` concatenates the file chunks, and adds the content to the `assets` HashMap, with encoding data. The `assets` HashMap is used as file storage in the asset canisters. The file's name is used as `batch_name`, and the file identifier, which makes it easy to use the filename when requesting the file from the frontend.  
 
 ```javascript
-public func count() : async Nat {
-    counter += 1;
-    return counter;
+private let assets: HashMap.HashMap<Text, Types.Asset> = HashMap.HashMap<Text, Types.Asset>(
+  0, Text.equal, Text.hash,
+);
+
+public shared({caller}) func commit_batch(
+  {batch_name: Text; chunk_ids: [Nat]; content_type: Text;} : {
+    batch_name: Text;
+    content_type: Text;
+    chunk_ids: [Nat];
+  },
+) : async () {
+  var content_chunks : [[Nat8]] = [];
+
+  for (chunk_id in chunk_ids.vals()) {
+    let chunk: ?Types.Chunk = chunks.get(chunk_id);
+
+    switch (chunk) {
+      case (?{content}) {
+        content_chunks := Array.append<[Nat8]>(content_chunks, [content]);
+      };
+      case null {
+      };
+    };
+  };
+
+  if (content_chunks.size() > 0) {
+    var total_length = 0;
+    for (chunk in content_chunks.vals()) total_length += chunk.size();
+
+    assets.put(Text.concat("/assets/", batch_name), {
+      content_type = content_type;
+      encoding = {
+        modified  = Time.now();
+        content_chunks;
+        certified = false;
+        total_length
+      };
+    });
+  };
 };
 ```
 
 The function returns the incremented counter variable.
 
-#### getCount()
-The `getCount()` function returns the current counter value.
+#### HTTP Request()
+Asset canisters can be receive HTTP requests and serve web pages and assets like image files. In this example dapp the frontend is showing the uploaded image on the page after the upload has completed. The backend needs to support the incoming requests to get an image, and sending the image data to the browser.
 
+##### GET request
+**GET request**
 ```javascript
 public query func getCount() : async Nat {
     return counter;
