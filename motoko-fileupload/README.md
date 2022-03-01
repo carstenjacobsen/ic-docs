@@ -277,6 +277,11 @@ let file;
 const btnUpload = document.querySelector('button.upload');
 btnUpload?.addEventListener('click', upload);
 
+const input = document.querySelector('input');
+input?.addEventListener('change', ($event) => {
+  file = $event.target.files?.[0];
+});
+
 const uploadChunk = async ({batch_name, chunk}) => motoko_fileupload.create_chunk({
   batch_name,
   content: [...new Uint8Array(await chunk.arrayBuffer())]
@@ -314,6 +319,25 @@ const upload = async () => {
   console.log('uploaded');
 
   loadImage(batch_name);
+}
+```
+
+The function `loadImage()` will append the uploaded image to the web page. Note: The URL for the image will only work locally, for network deployment, the URL must be based on the public URL and not localhost.
+
+```javascript
+const loadImage = (batch_name) => {
+  if (!batch_name) {
+    return;
+  }
+  
+  const newImage = document.createElement('img');
+  newImage.src = `http://localhost:8000/assets/${batch_name}?canisterId=rrkah-fqaaa-aaaaa-aaaaq-cai`;
+
+  const img = document.querySelector('section:last-of-type img');
+  img?.parentElement.removeChild(img);
+
+  const section = document.querySelector('section:last-of-type');
+  section?.appendChild(newImage);
 }
 ```
 
