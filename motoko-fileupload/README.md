@@ -164,7 +164,7 @@ public shared query({caller}) func http_request(
 #### Streaming strategy
 Using a streaming strategy will return the data requested in chunks, which allows for returning larger files. The streaming strategy includes a function to create a token, a function to create the strategy and a callback function.
 
-_Create token_
+_Create token_<br>
 The function `create_token()` checks if there are remaining file chunks and returns a new token if there is. If there are not any remaining chunks, then `null` is returned.
 ```javascript
 private func create_token(
@@ -211,29 +211,33 @@ private func create_strategy(
 };
 ```
 
-
-
-
-_Create token_
-
+_Streaming callback_<br>
+The callback function returns the current file chunk, where the index of the chunk is determined by the token. 
 ```javascript
-private func create_token(
-  key : Text,
-  chunk_index : Nat,
-  asset : Types.Asset,
-  encoding : Types.AssetEncoding,
-) : ?Types.StreamingCallbackToken {
+public shared query({caller}) func http_request_streaming_callback(
+        st : Types.StreamingCallbackToken,
+    ) : async Types.StreamingCallbackHttpResponse {
 
-  if (chunk_index + 1 >= encoding.content_chunks.size()) {
-    null;
-  } else {
-    ?{
-      key;
-      index = chunk_index + 1;
-      content_encoding = "gzip";
+        //Debug.print(debug_show(st.key));
+        //Debug.print(debug_show(assets.get(st.key)));
+
+        switch (assets.get(st.key)) {
+            case (null) throw Error.reject("key not found: " # st.key);
+            case (? asset) {
+
+                Debug.print(debug_show("Return next chunk"));
+
+                return {
+                    token = create_token(
+                        st.key,
+                        st.index,
+                        asset.encoding,
+                    );
+                    body = asset.encoding.content_chunks[st.index];
+                };
+            };
+        };
     };
-  };
-};
 ```
 
 ### Candid interface
