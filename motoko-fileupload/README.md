@@ -372,4 +372,4 @@ ryjl3-tyaaa-aaaaa-aaaba-cai
 This project is licensed under the Apache 2.0 license, see LICENSE.md for details. See CONTRIBUTE.md for details about how to contribute to this project.
 
 ## Credit
-This project is inspired by, and based on, the project [https://github.com/peterpeterparker/ic_assets](https://github.com/peterpeterparker/ic_assets).
+This project is inspired by, and based on, the project [ic_assets](https://github.com/peterpeterparker/ic_assets).
