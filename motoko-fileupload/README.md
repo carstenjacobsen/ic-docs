@@ -164,10 +164,24 @@ public shared query({caller}) func http_request(
 #### Streaming strategy
 Using a streaming strategy will return the data requested in chunks, which allows for returning larger files. The streaming strategy includes a function to create a token, a function to create the strategy and a callback function.
 
+__Create token__
 ```javascript
-public func reset() : async Nat {
-    counter := 0;
-    return counter;
+private func create_token(
+  key : Text,
+  chunk_index : Nat,
+  asset : Types.Asset,
+  encoding : Types.AssetEncoding,
+) : ?Types.StreamingCallbackToken {
+
+  if (chunk_index + 1 >= encoding.content_chunks.size()) {
+    null;
+  } else {
+    ?{
+      key;
+      index = chunk_index + 1;
+      content_encoding = "gzip";
+    };
+  };
 };
 ```
 
