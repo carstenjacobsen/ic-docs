@@ -1,5 +1,5 @@
 # Fileupload in Motoko 
-The example dapp shows how to build a very basic dapp, which can upload image files from a frontend to an asset canister. The dapp is using Motoko for the backend functionality and plain HTML and JavaScript for the frontend. See full example code [here](https://github.com/dfinity/examples/tree/master/motoko/fileupload)
+The example dapp shows how to build a very basic dapp, which can upload image files from a frontend to an asset canister. The dapp is using Motoko for the backend functionality and plain HTML and JavaScript for the frontend. See full example code [here](https://github.com/dfinity/examples/tree/master/motoko/fileupload).
 
 ![Fileupload Frontend](README_images/frontend.png)
 
