@@ -60,11 +60,6 @@ private let chunks: HashMap.HashMap<Nat, Types.Chunk> = HashMap.HashMap<Nat, Typ
   0, Nat.equal, Hash.hash,
 );
 
-public type Chunk = {
-  batch_name : Text;
-  content  : [Nat8];
-};
-
 public shared({caller}) func create_chunk(chunk: Types.Chunk) : async {
   chunk_id : Nat
 } {
@@ -127,6 +122,7 @@ The function returns the incremented counter variable.
 Asset canisters can be receive HTTP requests and serve web pages and assets like image files. In this example dapp the frontend is showing the uploaded image on the page after the upload has completed. The backend needs to support the incoming requests to get an image, and a streaming strategy for sending the image data to the browser.
 
 ##### GET request
+The `http_request` function handles HTTP queries. A GET method is implemented to handle requests to get uploaded images. The request URL is parsed to identify the filename, and the content associated with the filename, headers, status code and streaming strategy is returned as a response to the request.
 
 ```javascript
 public shared query({caller}) func http_request(
@@ -165,7 +161,7 @@ public shared query({caller}) func http_request(
 };
 ```
 
-#### reset()
+#### Streaming strategy
 The `reset()` function resets the counter value to 0 and returns the value.
 
 ```javascript
