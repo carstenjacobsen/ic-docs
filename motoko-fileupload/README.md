@@ -164,8 +164,29 @@ public shared query({caller}) func http_request(
 #### Streaming strategy
 Using a streaming strategy will return the data requested in chunks, which allows for returning larger files. The streaming strategy includes a function to create a token, a function to create the strategy and a callback function.
 
+_Create token_
+The function `create_token()` checks if there are remaining file chunks and returns a new token if there is. If there are not any remaining chunks, then `null` is returned.
+```javascript
+private func create_token(
+  key : Text,
+  chunk_index : Nat,
+  asset : Types.Asset,
+  encoding : Types.AssetEncoding,
+) : ?Types.StreamingCallbackToken {
 
-_Create strategy_
+  if (chunk_index + 1 >= encoding.content_chunks.size()) {
+    null;
+  } else {
+    ?{
+      key;
+      index = chunk_index + 1;
+      content_encoding = "gzip";
+    };
+  };
+};
+```
+
+_Create strategy_<br>
 The function `create_strategy()` uses `create_token()` to check of there are file chunks left to process. If there is, a callback function is setup for the asset canister to handle file chunks. 
 ```javascript
 private func create_strategy(
