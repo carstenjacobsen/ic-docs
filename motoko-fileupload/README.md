@@ -357,56 +357,19 @@ $ dfx deploy
 
 
 ## Testing
-The functionality in this example dapp can be tested both in the frontend and in the backend. Before the example dapp can be tested, it must be deployed (locally) as described in the above Deployment section.
+The functionality in this example dapp can be tested by using the frontend. Before the example dapp can be tested, it must be deployed (locally) as described in the above Deployment section.
 
-### Test the Frontend
 The URL for the frontend depends on the canister ID, which can be retrieved from the `dfx canister id <canister_name>` command.
 
 ```bash
-$ dfx canister id minimal_dapp_assets
+$ dfx canister id motoko_fileupload_assets
 ryjl3-tyaaa-aaaaa-aaaba-cai
 ```
 **https://<ui_canister_id>.localhost:8000**
 
-### Test the backend
-There are two ways of testing the backend. One way is by making command line requests using DFX, and the other way is to use the Candid UI.
-
-#### dfx
-DFX has a subset of commands for canister operations, and one of them enables calling the public functions added to the `main.mo` file in the previous step. In the following examples the initial value is 0. `count` will increment value and return 1, `getCount` will return the current value and `reset` will set the value to 0.
-
-Command usage: `dfx canister call <project>  <function>`
-
-```bash
-$ dfx canister call minimal_dapp count
-(1 : Nat)
-```
-
-```bash
-$ dfx canister call minimal_dapp getCount
-(1 : Nat)
-```
-
-```bash
-$ dfx canister call minimal_dapp reset
-(0 : Nat)
-```
-
-#### Candid UI
-The Candid interface is automatically created, and it has a convenient UI, which provides an easy, user-friendly way to test the backend. The UI is also automatically generated, and the canister ID can be retrieved from the `dfx canister id <canister_name>` command.
-
-```bash
-$ dfx canister id __Candid_UI
-r7inp-6aaaa-aaaaa-aaabq-cai
-$ dfx canister id minimal_dapp
-rrkah-fqaaa-aaaaa-aaaaq-cai
-```
-
-**http://<candid_canister_id>.localhost:8000/?id=<backend_canister_id>**
-
-![Candid UI](README_images/candid_ui.png)
 
 ## License
 This project is licensed under the Apache 2.0 license, see LICENSE.md for details. See CONTRIBUTE.md for details about how to contribute to this project.
 
 ## Credit
-This project is licensed under the Apache 2.0 license, see LICENSE.md for details. See CONTRIBUTE.md for details about how to contribute to this project.
+This project is inspired by, and based on, the project [https://github.com/peterpeterparker/ic_assets](https://github.com/peterpeterparker/ic_assets).
