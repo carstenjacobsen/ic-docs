@@ -215,58 +215,53 @@ _Streaming callback_<br>
 The callback function returns the current file chunk, where the index of the chunk is determined by the token. 
 ```javascript
 public shared query({caller}) func http_request_streaming_callback(
-        st : Types.StreamingCallbackToken,
-    ) : async Types.StreamingCallbackHttpResponse {
+  st : Types.StreamingCallbackToken,
+) : async Types.StreamingCallbackHttpResponse {
 
-        //Debug.print(debug_show(st.key));
-        //Debug.print(debug_show(assets.get(st.key)));
-
-        switch (assets.get(st.key)) {
-            case (null) throw Error.reject("key not found: " # st.key);
-            case (? asset) {
-
-                Debug.print(debug_show("Return next chunk"));
-
-                return {
-                    token = create_token(
-                        st.key,
-                        st.index,
-                        asset.encoding,
-                    );
-                    body = asset.encoding.content_chunks[st.index];
-                };
-            };
-        };
+  switch (assets.get(st.key)) {
+    case (null) throw Error.reject("key not found: " # st.key);
+    case (? asset) {
+      return {
+        token = create_token(
+          st.key,
+          st.index,
+          asset.encoding,
+        );
+        body = asset.encoding.content_chunks[st.index];
+      };
     };
+  };
+};
 ```
 
-### Candid interface
-The Candid interface is automatically created, and it has a convenient UI, which provides an easy, user-friendly way to test the backend. Learn how to access the Candid UI in the **Testing** section below. 
-
 ### Frontend
-The default project installed with `dfx new project_name` has an `index.html` file with page HTML and an `index.js` file with an implementation of the backend functions. These two files are modified in this example project to support the counter functionality, and the backend functions.
+The default project installed with `dfx new project_name` has an `index.html` file with page HTML and an `index.js` file with an implementation of the backend functions. These two files are modified in this example project to support the image file upload functionality, and the backend functions.
 
 #### HTML
-All HTML code is in the `src/minimal_dapp_assets/src/index.html` file, and most of the HTML is carried over from the default project. The button is kept and so is the section showing the result, just simplified.
+All HTML code is in the `src/motoko-fileupload_assets/src/index.html` file, and most of the HTML is carried over from the default project. The button is kept and so is the section showing the result, just simplified.
 
 ```html
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
-        <title>Minimal Dapp</title>
-        <base href="/">
-
-        <link type="text/css" rel="stylesheet" href="main.css" />
-    </head>
-    <body>
-        <img src="logo.png" alt="DFINITY logo" />
-        <section>
-            <button id="clickMeBtn">Click Me!</button>
-        </section>
-        <section id="counter"></section>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Motoko Fileupload</title>
+    <base href="/" />
+    <link rel="icon" href="favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <main>
+      <img src="logo.png" alt="DFINITY logo" />
+      <section>
+        <label for="image">Image:</label>
+        <input id="image" alt="image" type="file" accept="image/x-png,image/jpeg,image/gif,image/svg+xml,image/webp" />
+        <button class="upload">Upload</button>
+      </section>
+      <section></section>
+    </main>
+  </body>
 </html>
 ```
 
