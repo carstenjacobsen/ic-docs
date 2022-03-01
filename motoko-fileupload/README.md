@@ -268,11 +268,14 @@ All HTML code is in the `src/motoko-fileupload_assets/src/index.html` file, and 
 #### JavaScript
 The JavaScript code has three primary features. It takes a file from the local system (e.g. laptop) and split it into chunks, then it sends the file in chunks to the backend, and finally renders the image file on the web page. 
 
-
+The function `upload()` is invoked when the `Upload` button is clicked. The selected image file is sliced by the for-loop, into 500kb chunks, and uploaded to the backend function through `uploadChunk()`. When all chunks have been uploaded, the batch of chunks are committed in the backend, using the filename as the batch identifier. After committing the batch, the function `loadImage()` is called to render the image file on the web page. 
 ```javascript
 import { motoko_fileupload } from "../../declarations/motoko_fileupload";
 
 let file;
+
+const btnUpload = document.querySelector('button.upload');
+btnUpload?.addEventListener('click', upload);
 
 const uploadChunk = async ({batch_name, chunk}) => motoko_fileupload.create_chunk({
   batch_name,
@@ -307,12 +310,11 @@ const upload = async () => {
     chunk_ids: chunkIds.map(({chunk_id}) => chunk_id),
     content_type: file.type
   })
-  
+
   console.log('uploaded');
 
   loadImage(batch_name);
 }
-
 ```
 
 
