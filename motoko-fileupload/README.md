@@ -1,5 +1,5 @@
 # Fileupload in Motoko 
-The example dapp shows how to build a very basic dapp, which can upload image files from a frontend to an asset canister. The dapp is using Motoko for the backend functionality and plain HTML and JavaScript for the frontend. 
+The example dapp shows how to build a very basic dapp, which can upload image files from a frontend to an asset canister. The dapp is using Motoko for the backend functionality and plain HTML and JavaScript for the frontend. See full example code [here](https://github.com/dfinity/examples/tree/master/motoko/fileupload)
 
 ![Fileupload Frontend](README_images/frontend.png)
 
@@ -32,7 +32,7 @@ Install the example dapp project:
 
 ```bash
 $ git clone https://github.com/dfinity/examples
-$ cd motoko/motoko-fileupload
+$ cd motoko/fileupload
 $ npm install
 ```
 
@@ -47,7 +47,7 @@ The three main parts of the example dapp are the backend, the Candid interface a
 The fileupload is done in chunks, to support uploading larger files than 2MB, which is the ingress limit. Uploaded files are stored in an asset canister, which can serve assets like image files.
 
 ### Motoko backend
-The backend functions are located in the `src/simple_fileupload/main.mo` Motoko file. The backend can receive a batch of chunks of a file, when a file is uploaded in the frontend, and when the batch is complete, it stores the file in the asset canister. The backend also includes functionality to serve the file to the frontend.
+The backend functions are located in the `src/fileupload/main.mo` Motoko file. The backend can receive a batch of chunks of a file, when a file is uploaded in the frontend, and when the batch is complete, it stores the file in the asset canister. The backend also includes functionality to serve the file to the frontend.
 
 #### Create chunk
 The function `create_chunk()` takes a chunk of a file, and adds the chunk, and an ID identifying the chunk, to the `chunks` HashMap. The chunk ID is incremented before adding the chunk to `chunks`.
