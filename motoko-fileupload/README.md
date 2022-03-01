@@ -162,7 +162,7 @@ public shared query({caller}) func http_request(
 ```
 
 #### Streaming strategy
-The `reset()` function resets the counter value to 0 and returns the value.
+Using a streaming strategy will return the data requested in chunks, which allows for returning larger files. The streaming strategy includes a function to create a token, a function to create the strategy and a callback function.
 
 ```javascript
 public func reset() : async Nat {
