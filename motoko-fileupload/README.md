@@ -238,7 +238,7 @@ public shared query({caller}) func http_request_streaming_callback(
 The default project installed with `dfx new project_name` has an `index.html` file with page HTML and an `index.js` file with an implementation of the backend functions. These two files are modified in this example project to support the image file upload functionality, and the backend functions.
 
 #### HTML
-All HTML code is in the `src/motoko-fileupload_assets/src/index.html` file, and most of the HTML is carried over from the default project. The button is kept and so is the section showing the result, just simplified.
+All HTML code is in the `src/motoko-fileupload_assets/src/index.html` file, and most of the HTML is carried over from the default project. Controls for file uploads are added.
 
 ```html
 <!DOCTYPE html>
@@ -265,21 +265,54 @@ All HTML code is in the `src/motoko-fileupload_assets/src/index.html` file, and 
 </html>
 ```
 
-#### Javascript
-Two eventlisteners are added to the JavaScript file, `src/minimal_dapp_assets/src/index.js`, the existing JavaScript file from the default project. One eventlistener is for detecting button clicks, and it's calling the `count()` function in the backend, and an eventlistener for page load is added to get the initial value of the counter with `getCount()`. The backend functions are imported through the Candid interface.
+#### JavaScript
+The JavaScript code has three primary features. It takes a file from the local system (e.g. laptop) and split it into chunks, then it sends the file in chunks to the backend, and finally renders the image file on the web page. 
+
 
 ```javascript
-import { minimal_dapp } from "../../declarations/minimal_dapp";
+import { motoko_fileupload } from "../../declarations/motoko_fileupload";
 
-document.addEventListener('DOMContentLoaded', async function () {
-  const counter = await minimal_dapp.getCount();
-  document.getElementById("counter").innerText = "Counter: " + counter;
+let file;
+
+const uploadChunk = async ({batch_name, chunk}) => motoko_fileupload.create_chunk({
+  batch_name,
+  content: [...new Uint8Array(await chunk.arrayBuffer())]
 })
 
-document.getElementById("clickMeBtn").addEventListener("click", async () => {
-  const counter = await minimal_dapp.count();
-  document.getElementById("counter").innerText = "Counter: " + counter;
-});
+const upload = async () => {
+  if (!file) {
+    alert('No file selected');
+    return;
+  }
+
+  console.log('start upload');
+
+  const batch_name = file.name;
+  const promises = [];
+  const chunkSize = 500000;
+
+  for (let start = 0; start < file.size; start += chunkSize) {
+    const chunk = file.slice(start, start + chunkSize);
+
+    promises.push(uploadChunk({
+      batch_name,
+      chunk
+    }));
+  }
+
+  const chunkIds = await Promise.all(promises);
+
+  await motoko_fileupload.commit_batch({
+    batch_name,
+    chunk_ids: chunkIds.map(({chunk_id}) => chunk_id),
+    content_type: file.type
+  })
+  
+  console.log('uploaded');
+
+  loadImage(batch_name);
+}
+
 ```
 
 
